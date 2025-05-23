@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учет самокатов</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Учет самокатов</h1>
+            <div class="shift-controls">
+                <button id="startShift" class="btn primary">Начать смену</button>
+                <button id="endShift" class="btn secondary" disabled>Завершить смену</button>
+            </div>
+            <div class="shift-info">
+                <div class="timer">Время смены: <span id="shiftTime">00:00:00</span></div>
+                <div class="total-scooters">Всего самокатов: <span id="totalScooters">0</span></div>
+            </div>
+        </header>
+
+        <main>
+            <div class="parking-grid">
+                <div class="parking-card" data-parking="beta">
+                    <h3>Бета</h3>
+                    <div class="scooter-counter">
+                        <div class="counter-group">
+                            <span>Yandex:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                        <div class="counter-group">
+                            <span>SunRent:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parking-card" data-parking="gum">
+                    <h3>ГУМ</h3>
+                    <div class="scooter-counter">
+                        <div class="counter-group">
+                            <span>Yandex:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                        <div class="counter-group">
+                            <span>SunRent:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parking-card" data-parking="vefa">
+                    <h3>Вефа</h3>
+                    <div class="scooter-counter">
+                        <div class="counter-group">
+                            <span>Yandex:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                        <div class="counter-group">
+                            <span>SunRent:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parking-card" data-parking="med">
+                    <h3>Мед Академия</h3>
+                    <div class="scooter-counter">
+                        <div class="counter-group">
+                            <span>Yandex:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                        <div class="counter-group">
+                            <span>SunRent:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parking-card" data-parking="polytech">
+                    <h3>Политех</h3>
+                    <div class="scooter-counter">
+                        <div class="counter-group">
+                            <span>Yandex:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                        <div class="counter-group">
+                            <span>SunRent:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parking-card" data-parking="yuzhka">
+                    <h3>Южка</h3>
+                    <div class="scooter-counter">
+                        <div class="counter-group">
+                            <span>Yandex:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                        <div class="counter-group">
+                            <span>SunRent:</span>
+                            <button class="counter-btn minus">-</button>
+                            <span class="count">0</span>
+                            <button class="counter-btn plus">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shift-summary" id="shiftSummary" style="display: none;">
+                <h2>Итоги смены</h2>
+                <div class="summary-content">
+                    <p>Время работы: <span id="summaryTime">0</span> часов</p>
+                    <p>Всего самокатов: <span id="summaryTotal">0</span></p>
+                    <p>Ставка: <span id="summaryRate">100</span> сом/час</p>
+                    <p>Заработок: <span id="summaryEarnings">0</span> сом</p>
+                </div>
+            </div>
+
+            <div class="shift-history">
+                <h2>История смен</h2>
+                <div id="historyList" class="history-list">
+                    <!-- История смен будет добавляться здесь -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
