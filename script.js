@@ -420,20 +420,81 @@ function initializeEventListeners() {
     });
 }
 
-function initializeApp() {
-    loadState();
-    initializeEventListeners();
-    updateUI();
-    setInterval(saveState, 5000);
+// Проверка загрузки Font Awesome
+function checkFontAwesome() {
+    const testIcon = document.createElement('i');
+    testIcon.className = 'fas fa-play';
+    document.body.appendChild(testIcon);
+    const computedStyle = window.getComputedStyle(testIcon);
+    const fontFamily = computedStyle.getPropertyValue('font-family');
+    document.body.removeChild(testIcon);
+    
+    if (!fontFamily.includes('Font Awesome')) {
+        // Если Font Awesome не загрузился, показываем fallback иконки
+        document.querySelectorAll('.btn-icon').forEach(icon => {
+            icon.style.display = 'none';
+        });
+        document.querySelectorAll('.icon-fallback').forEach(icon => {
+            icon.style.display = 'inline-block';
+        });
+    } else {
+        // Если Font Awesome загрузился, скрываем fallback иконки
+        document.querySelectorAll('.icon-fallback').forEach(icon => {
+            icon.style.display = 'none';
+        });
+    }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const splash = document.querySelector('.splash-screen');
-        if (splash) {
-            splash.remove();
+// Инициализация приложения
+function initializeApp() {
+    try {
+        // Проверяем загрузку Font Awesome
+        checkFontAwesome();
+        
+        // Инициализация Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            tg.enableClosingConfirmation();
+            
+            // Применяем тему Telegram
+            document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#ffffff');
+            document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#000000');
+            document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color || '#999999');
+            document.documentElement.style.setProperty('--tg-theme-link-color', tg.themeParams.link_color || '#2481cc');
+            document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#2481cc');
+            document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color || '#ffffff');
         }
-    }, 2500);
-    
-    initializeApp();
+        
+        // Загружаем состояние
+        loadState();
+        
+        // Инициализируем обработчики событий
+        initializeEventListeners();
+        
+        // Обновляем UI
+        updateUI();
+        
+        // Сохраняем состояние каждые 5 секунд
+        setInterval(saveState, 5000);
+        
+        // Скрываем splash screen
+        setTimeout(() => {
+            document.querySelector('.splash-screen').style.display = 'none';
+        }, 1000);
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        // Показываем ошибку пользователю
+        alert('Произошла ошибка при инициализации приложения. Пожалуйста, перезагрузите страницу.');
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        initializeApp();
+    } catch (error) {
+        console.error('Error on DOMContentLoaded:', error);
+        alert('Произошла ошибка при загрузке приложения. Пожалуйста, перезагрузите страницу.');
+    }
 }); 
