@@ -889,4 +889,597 @@ h1 {
     to {
         transform: translateY(0);
     }
+}
+
+/* Стили для вкладок ремонта */
+.parking-tab[data-parking="repairs"] {
+    position: relative;
+    padding: 12px 24px;
+    font-weight: 500;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    background: linear-gradient(to right, #fff9e6, #ffe0b3);
+    color: #f39c12;
+}
+
+.parking-tab[data-parking="repairs"]:hover {
+    background: linear-gradient(to right, #ffe0b3, #ffd699);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.15);
+}
+
+.parking-tab[data-parking="repairs"].active {
+    background: #f39c12;
+    color: white;
+    border-color: #f39c12;
+    box-shadow: 0 2px 12px rgba(243, 156, 18, 0.2);
+}
+
+/* Стили для карточки ремонта */
+#repairs.parking-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #f39c12;
+}
+
+#repairs.parking-card .card-header h3 {
+    color: #f39c12;
+    font-weight: 600;
+}
+
+/* Стили для секции ремонта */
+.repair-section {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.repair-section:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.repair-section h4 {
+    color: var(--text-color);
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Стили для полей ввода */
+.repair-input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.repair-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.repair-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    outline: none;
+}
+
+/* Стили для кнопки добавления */
+.add-repair-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    background: #f39c12;
+    color: white;
+}
+
+.add-repair-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.15);
+    background: #d35400;
+}
+
+/* Стили для списка ремонта */
+.repair-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.repair-number {
+    position: relative;
+    padding: 12px 16px;
+    border-radius: var(--border-radius);
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    background: var(--background-color);
+}
+
+.repair-number:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.repair-number.repairing {
+    background: #fff3e0;
+    border-color: #f39c12;
+    animation: pulse-repairing 2s infinite;
+}
+
+.repairing .repair-status {
+    background: #f39c12;
+}
+
+.repair-number.fixed {
+    background: #e8f5e9;
+    border-color: #2ecc71;
+    animation: pulse-fixed 2s infinite;
+}
+
+.fixed .repair-status {
+    background: #2ecc71;
+}
+
+.repair-number.replacement {
+    background: #f3e5f5;
+    border-color: #9b59b6;
+    animation: pulse-replacement 2s infinite;
+}
+
+.repair-number.warehouse {
+    background: #fce4ec;
+    border-color: #e91e63;
+    animation: pulse-warehouse 2s infinite;
+}
+
+.repair-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.repair-number-text {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.repair-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    color: white;
+}
+
+.repairing .repair-status {
+    background: #f39c12;
+}
+
+.fixed .repair-status {
+    background: #2ecc71;
+}
+
+.replacement .repair-status {
+    background: #9b59b6;
+}
+
+.warehouse .repair-status {
+    background: #e91e63;
+}
+
+.repair-comment {
+    color: #666;
+    font-size: 13px;
+    font-style: italic;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 6px;
+    margin-top: 4px;
+}
+
+/* Стили для списка ремонта в истории */
+.repairs-section {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    margin-top: 16px;
+    border: 1px solid #f39c12;
+    overflow: hidden;
+}
+
+.repairs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: linear-gradient(to right, #fff9e6, #ffe0b3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.repairs-header:hover {
+    background: linear-gradient(to right, #ffe0b3, #ffd699);
+}
+
+.repairs-details {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid var(--border-color);
+}
+
+.repair-group {
+    margin-bottom: 16px;
+}
+
+.repair-group:last-child {
+    margin-bottom: 0;
+}
+
+.repair-numbers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+    .repair-numbers-list {
+        grid-template-columns: 1fr;
+    }
+
+    .repair-number {
+        padding: 10px;
+    }
+
+    .repair-status {
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+
+    .repair-comment {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .repair-input-group {
+        flex-direction: column;
+    }
+
+    .add-repair-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .repair-number {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* Анимации пульсации для разных статусов */
+@keyframes pulse-repairing {
+    0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.6); }
+    70% { box-shadow: 0 0 0 15px rgba(243, 156, 18, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); }
+}
+
+@keyframes pulse-fixed {
+    0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); }
+    70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+@keyframes pulse-replacement {
+    0% { box-shadow: 0 0 0 0 rgba(155, 89, 182, 0.6); }
+    70% { box-shadow: 0 0 0 15px rgba(155, 89, 182, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(155, 89, 182, 0); }
+}
+
+@keyframes pulse-warehouse {
+    0% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.6); }
+    70% { box-shadow: 0 0 0 15px rgba(233, 30, 99, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0); }
+}
+
+/* Стили для кнопок */
+.repair-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.mark-fixed-btn,
+.mark-warehouse-btn,
+.cancel-repair-btn,
+.remove-repair-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.mark-fixed-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.2);
+}
+
+.mark-warehouse-btn {
+    background: linear-gradient(135deg, #e91e63, #c2185b);
+    color: white;
+    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.2);
+}
+
+.cancel-repair-btn {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+    box-shadow: 0 2px 8px rgba(149, 165, 166, 0.2);
+}
+
+.remove-repair-btn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+}
+
+.mark-fixed-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+    background: linear-gradient(135deg, #27ae60, #219a52);
+}
+
+.mark-warehouse-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+    background: linear-gradient(135deg, #c2185b, #ad1457);
+}
+
+.cancel-repair-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
+    background: linear-gradient(135deg, #7f8c8d, #6c7a7d);
+}
+
+.remove-repair-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    background: linear-gradient(135deg, #c0392b, #a93226);
+}
+
+/* Стили для вкладок в истории ремонта */
+.repairs-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.repair-tab {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #f5f5f5;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.repair-tab i {
+    font-size: 16px;
+}
+
+.repair-tab.active {
+    background: #2ecc71;
+    color: white;
+}
+
+.repair-tab[data-tab="warehouse"].active {
+    background: #e91e63;
+}
+
+.tab-count {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.repair-tab-content {
+    display: none;
+}
+
+.repair-tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.repair-counts {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.repairing-count {
+    color: #f39c12;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.fixed-count {
+    color: #2ecc71;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.warehouse-count {
+    color: #e91e63;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.repairing-count i,
+.fixed-count i,
+.warehouse-count i {
+    font-size: 16px;
+}
+
+/* Стили для вкладок */
+.repair-tab.active[data-tab="repairing"] {
+    background: #f39c12;
+    color: white;
+}
+
+.repair-tab.active[data-tab="fixed"] {
+    background: #2ecc71;
+    color: white;
+}
+
+.repair-tab.active[data-tab="warehouse"] {
+    background: #e91e63;
+    color: white;
+}
+
+/* Адаптивные стили для вкладок */
+@media (max-width: 768px) {
+    .repairs-tabs {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .repair-tab {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .repair-counts {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Стили для заголовка типа самоката */
+.repair-type-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+}
+
+.repair-type {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--secondary-color);
+}
+
+.repair-type-counts {
+    display: flex;
+    gap: 15px;
+    font-size: 13px;
+}
+
+.repair-type-counts .repairing-count,
+.repair-type-counts .fixed-count,
+.repair-type-counts .warehouse-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.repair-type-counts .repairing-count {
+    color: #f39c12;
+}
+
+.repair-type-counts .fixed-count {
+    color: #2ecc71;
+}
+
+.repair-type-counts .warehouse-count {
+    color: #e91e63;
+}
+
+.repair-type-counts i {
+    font-size: 14px;
+}
+
+/* Обновленные стили для списка самокатов */
+.repair-numbers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.repair-group {
+    margin-bottom: 20px;
+}
+
+.repair-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+    .repair-type-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .repair-type-counts {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .repair-type-counts .repairing-count,
+    .repair-type-counts .fixed-count,
+    .repair-type-counts .warehouse-count {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .repair-numbers-list {
+        grid-template-columns: 1fr;
+    }
 } 

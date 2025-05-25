@@ -226,12 +226,12 @@
                         <button id="startShift" class="btn primary">
                             <i class="fas fa-play btn-icon"></i>
                             <span class="icon-fallback icon-play"></span>
-                            Начать смену
+                            На линию
                         </button>
                         <button id="endShift" class="btn secondary" disabled>
                             <i class="fas fa-stop btn-icon"></i>
                             <span class="icon-fallback icon-stop"></span>
-                            Завершить смену
+                            Выйти с линии
                         </button>
                     </div>
                     
@@ -291,6 +291,8 @@
                 <button class="parking-tab" data-parking="medical">Медицинская Академия</button>
                 <button class="parking-tab" data-parking="polytech">Политех</button>
                 <button class="parking-tab" data-parking="yuzhka">Южка</button>
+                <!-- <button class="parking-tab" data-parking="replacements">Замены</button> -->
+                <button class="parking-tab" data-parking="repairs">Исправления и замены</button>
             </div>
 
             <div class="parking-grid">
@@ -452,6 +454,66 @@
                                 <span class="count sunrent-count">0</span>
                                 <button class="counter-btn plus">+</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="replacements" class="parking-card">
+                    <div class="card-header">
+                        <h3>Замены самокатов</h3>
+                    </div>
+                    <div class="replacements-container">
+                        <div class="replacement-section">
+                            <h4>Yandex</h4>
+                            <div class="replacement-input-group">
+                                <input type="text" id="yandexReplacementInput" class="replacement-input" placeholder="Номер самоката">
+                                <input type="text" id="yandexReplacementComment" class="replacement-input" placeholder="Комментарий">
+                                <button class="add-replacement-btn" data-type="yandex">
+                                    <i class="fas fa-plus"></i> Добавить
+                                </button>
+                            </div>
+                            <div id="yandexReplacementsList" class="replacement-list"></div>
+                        </div>
+                        <div class="replacement-section">
+                            <h4>SunRent</h4>
+                            <div class="replacement-input-group">
+                                <input type="text" id="sunrentReplacementInput" class="replacement-input" placeholder="Номер самоката">
+                                <input type="text" id="sunrentReplacementComment" class="replacement-input" placeholder="Комментарий">
+                                <button class="add-replacement-btn" data-type="sunrent">
+                                    <i class="fas fa-plus"></i> Добавить
+                                </button>
+                            </div>
+                            <div id="sunrentReplacementsList" class="replacement-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="repairs" class="parking-card">
+                    <div class="card-header">
+                        <h3>Самокаты на исправлении</h3>
+                    </div>
+                    <div class="replacements-container">
+                        <div class="replacement-section">
+                            <h4>Yandex</h4>
+                            <div class="repair-input-group">
+                                <input type="text" id="yandexRepairInput" class="repair-input" placeholder="Введите номер самоката">
+                                <button class="add-repair-btn" data-type="yandex">
+                                    <i class="fas fa-tools"></i>
+                                    Добавить на исправление
+                                </button>
+                            </div>
+                            <div id="yandexRepairsList" class="repair-list"></div>
+                        </div>
+                        <div class="replacement-section">
+                            <h4>SunRent</h4>
+                            <div class="repair-input-group">
+                                <input type="text" id="sunrentRepairInput" class="repair-input" placeholder="Введите номер самоката">
+                                <button class="add-repair-btn" data-type="sunrent">
+                                    <i class="fas fa-tools"></i>
+                                    Добавить на исправление
+                                </button>
+                            </div>
+                            <div id="sunrentRepairsList" class="repair-list"></div>
                         </div>
                     </div>
                 </div>
