@@ -863,8 +863,6 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error(`Отсутствуют необходимые элементы: ${missingElements.join(', ')}`)
         }
 
-        // checkFontAwesome()
-        
         if (window.Telegram && window.Telegram.WebApp) {
             try {
                 const tg = window.Telegram.WebApp
@@ -923,11 +921,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 splashScreen.style.display = 'none'
             }, 1000)
         }
-
-        // Восстановить тему из localStorage
-        const savedTheme = localStorage.getItem('theme') || 'light'
-        setTheme(savedTheme)
-        document.getElementById('toggleThemeBtn').addEventListener('click', toggleTheme)
     } catch (error) {
         console.error('Критическая ошибка при инициализации приложения:', error)
         // Показываем более информативное сообщение об ошибке
