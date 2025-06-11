@@ -164,6 +164,16 @@ body::-webkit-scrollbar-thumb,
   color: var(--color-text) !important;
 }
 
+/* Используем фон и цвет Telegram, если они заданы */
+.report-modal,
+.shift-report,
+.modal,
+.popup,
+.dropdown-menu {
+  background: var(--tg-theme-bg-color, var(--color-card)) !important;
+  color: var(--tg-theme-text-color, var(--color-text)) !important;
+}
+
 /* Для всех вложенных элементов отчёта */
 .report-modal *,
 .shift-report *,
