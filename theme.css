@@ -154,6 +154,26 @@ body::-webkit-scrollbar-thumb,
   transition: background 0.3s, color 0.3s;
 }
 
+/* Гарантируем контраст текста и фона для всех отчётов и модальных окон */
+.report-modal,
+.shift-report,
+.modal,
+.popup,
+.dropdown-menu {
+  background: var(--color-card) !important;
+  color: var(--color-text) !important;
+}
+
+/* Для всех вложенных элементов отчёта */
+.report-modal *,
+.shift-report *,
+.modal *,
+.popup *,
+.dropdown-menu * {
+  color: var(--color-text) !important;
+  background: transparent !important;
+}
+
 /* Для темной темы — делаем текст светлым на тёмных блоках */
 [data-theme="dark"] .card,
 [data-theme="dark"] .parking-card,
