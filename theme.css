@@ -1,0 +1,216 @@
+/* --- Общие переменные --- */
+:root {
+  --color-bg: #f7f7f7;
+  --color-text: #222;
+  --color-card: #fff;
+  --color-border: #e0e0e0;
+  --color-accent: #2481cc;
+  --color-success: #4caf50;
+  --color-warning: #ff9800;
+  --color-danger: #e53935;
+  --color-shadow: rgba(0,0,0,0.07);
+  --color-input-bg: #fff;
+  --color-input-text: #222;
+  --color-scrollbar: #cccccc;
+  --color-scrollbar-thumb: #b0b0b0;
+}
+
+/* --- Тёмная тема --- */
+[data-theme="dark"] {
+  --color-bg: #181c20;
+  --color-text: #f1f1f1;
+  --color-card: #23272b;
+  --color-border: #333;
+  --color-accent: #4fa3ff;
+  --color-success: #7be87b;
+  --color-warning: #ffc107;
+  --color-danger: #ff6f60;
+  --color-shadow: rgba(0,0,0,0.25);
+  --color-input-bg: #23272b;
+  --color-input-text: #f1f1f1;
+  --color-scrollbar: #23272b;
+  --color-scrollbar-thumb: #444;
+}
+
+/* --- Базовые стили --- */
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Карточки, секции, элементы */
+.card, .parking-card, .repairs-section, .repair-number {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  margin-bottom: 16px;
+  padding: 16px;
+  transition: background 0.3s, border 0.3s, color 0.3s;
+  color: var(--color-text);
+}
+
+/* Кнопки */
+button, .btn, .repair-actions button, .toggle-theme-btn {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.2s, color 0.2s;
+}
+
+button:hover, .btn:hover {
+  background: var(--color-success);
+}
+
+.toggle-theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  cursor: pointer;
+}
+
+/* Счётчики */
+.repairing-count { color: var(--color-warning); }
+.fixed-count { color: var(--color-success); }
+.warehouse-count { color: var(--color-danger); }
+
+.repair-number.repairing { border-left: 4px solid var(--color-warning); }
+.repair-number.fixed { border-left: 4px solid var(--color-success); }
+.repair-number.warehouse { border-left: 4px solid var(--color-danger); }
+
+/* Инпуты */
+input, .repair-input, select, textarea {
+  background: var(--color-input-bg);
+  color: var(--color-input-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 4px 0;
+  transition: background 0.3s, color 0.3s, border 0.3s;
+}
+
+input:focus, .repair-input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent)33;
+}
+
+/* Ссылки */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--color-success);
+}
+
+/* Скроллбар */
+body, .repairs-section, .history-list {
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar);
+  scrollbar-width: thin;
+}
+body::-webkit-scrollbar,
+.repairs-section::-webkit-scrollbar,
+.history-list::-webkit-scrollbar {
+  width: 8px;
+  background: var(--color-scrollbar);
+}
+body::-webkit-scrollbar-thumb,
+.repairs-section::-webkit-scrollbar-thumb,
+.history-list::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 4px;
+}
+
+/* Модальные окна и всплывающие элементы */
+.modal, .popup, .dropdown-menu {
+  background: var(--color-card);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 12px var(--color-shadow);
+  border-radius: 10px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Для темной темы — делаем текст светлым на тёмных блоках */
+[data-theme="dark"] .card,
+[data-theme="dark"] .parking-card,
+[data-theme="dark"] .repairs-section,
+[data-theme="dark"] .repair-number,
+[data-theme="dark"] input,
+[data-theme="dark"] .repair-input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .modal,
+[data-theme="dark"] .popup,
+[data-theme="dark"] .dropdown-menu {
+  color: #f1f1f1;
+  background: #23272b;
+  border-color: #333;
+}
+
+/* Для светлой темы — делаем текст тёмным на светлых блоках */
+:root .card,
+:root .parking-card,
+:root .repairs-section,
+:root .repair-number,
+:root input,
+:root .repair-input,
+:root select,
+:root textarea,
+:root .modal,
+:root .popup,
+:root .dropdown-menu {
+  color: #222;
+  background: #fff;
+  border-color: #e0e0e0;
+}
+
+/* Для кнопок — всегда белый текст */
+button, .btn, .repair-actions button, .toggle-theme-btn {
+  color: #fff;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+  .card, .parking-card, .repairs-section, .repair-number {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  button, .btn, .repair-actions button {
+    padding: 8px 10px;
+    font-size: 1em;
+  }
+}
+
+/* Улучшение читаемости для темной темы */
+[data-theme="dark"] ::selection {
+  background: #4fa3ff;
+  color: #fff;
+}
+:root ::selection {
+  background: #2481cc;
+  color: #fff;
+}

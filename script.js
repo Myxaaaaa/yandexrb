@@ -2,7 +2,7 @@ const RATES = {
     BASE: 100,
     BONUS_60: 120,
     BONUS_100: 150
-};
+}
 
 let state = {
     isShiftActive: false,
@@ -18,245 +18,241 @@ let state = {
         yandex: {},
         sunrent: {}
     }
-};
+}
 
 function initializeParkingData() {
-    const parkings = ['beta', 'gum', 'vefa', 'medical', 'polytech', 'yuzhka'];
-    state.parkingData = {};
+    const parkings = ['beta', 'gum', 'vefa', 'medical', 'polytech', 'yuzhka']
+    state.parkingData = {}
     parkings.forEach(parking => {
         state.parkingData[parking] = {
             yandex: 0,
             sunrent: 0
-        };
-    });
+        }
+    })
     state.repairs = {
         yandex: [],
         sunrent: []
-    };
+    }
     state.repairStatuses = {
         yandex: {},
         sunrent: {}
-    };
+    }
 }
 
 function loadState() {
-    const savedState = localStorage.getItem('scooterAppState');
+    const savedState = localStorage.getItem('scooterAppState')
     if (savedState) {
-        const parsedState = JSON.parse(savedState);
-        state = { ...state, ...parsedState };
+        const parsedState = JSON.parse(savedState)
+        state = { ...state, ...parsedState }
         
         if (state.isShiftActive && state.startTime) {
-            state.startTime = new Date(state.startTime);
+            state.startTime = new Date(state.startTime)
             
-            const now = new Date();
-            const diff = now - state.startTime;
-            const hoursPassed = diff / (1000 * 60 * 60);
+            const now = new Date()
+            const diff = now - state.startTime
+            const hoursPassed = diff / (1000 * 60 * 60)
             
             if (hoursPassed > 24) {
-                state.isShiftActive = false;
-                state.startTime = null;
-                state.selectedParking = null;
-                initializeParkingData();
+                state.isShiftActive = false
+                state.startTime = null
+                state.selectedParking = null
+                initializeParkingData()
             }
         }
         
-        updateUI();
-        updateTotalStats();
+        updateUI()
+        updateTotalStats()
     }
 }
 
 function saveState() {
-    localStorage.setItem('scooterAppState', JSON.stringify(state));
+    localStorage.setItem('scooterAppState', JSON.stringify(state))
 }
 
 function updateUI() {
-    const startBtn = document.getElementById('startShift');
-    const endBtn = document.getElementById('endShift');
-    const shiftSummary = document.getElementById('shiftSummary');
-    const activeShiftEarnings = document.getElementById('activeShiftEarnings');
+    const startBtn = document.getElementById('startShift')
+    const endBtn = document.getElementById('endShift')
+    const shiftSummary = document.getElementById('shiftSummary')
+    const activeShiftEarnings = document.getElementById('activeShiftEarnings')
     
     if (startBtn && endBtn) {
-        startBtn.disabled = state.isShiftActive;
-        endBtn.disabled = !state.isShiftActive;
+        startBtn.disabled = state.isShiftActive
+        endBtn.disabled = !state.isShiftActive
     }
     
     if (shiftSummary) {
-        shiftSummary.style.display = state.isShiftActive ? 'none' : 'block';
+        shiftSummary.style.display = state.isShiftActive ? 'none' : 'block'
     }
     
     if (activeShiftEarnings) {
-        activeShiftEarnings.style.display = state.isShiftActive ? 'block' : 'none';
+        activeShiftEarnings.style.display = state.isShiftActive ? 'block' : 'none'
     }
     
     if (state.timerInterval) {
-        clearInterval(state.timerInterval);
-        state.timerInterval = null;
+        clearInterval(state.timerInterval)
+        state.timerInterval = null
     }
     if (state.earningsInterval) {
-        clearInterval(state.earningsInterval);
-        state.earningsInterval = null;
+        clearInterval(state.earningsInterval)
+        state.earningsInterval = null
     }
     
-    updateTimer();
-    updateCurrentEarnings();
-    updateParkingCounters();
-    updateParkingSelector();
-    updateHistoryDisplay();
-    updateRepairsList();
-    
-    // Добавляем обработчики событий для инпутов
-    initializeInputHandlers();
+    updateTimer()
+    updateCurrentEarnings()
+    updateParkingCounters()
+    updateParkingSelector()
+    updateHistoryDisplay()
+    updateRepairsList()
+    initializeInputHandlers()
 }
 
 function updateTimer() {
-    const timerElement = document.getElementById('shiftTimer');
-    if (!timerElement) return;
+    const timerElement = document.getElementById('shiftTimer')
+    if (!timerElement) return
     
     if (state.isShiftActive && state.startTime) {
         const updateTimerDisplay = () => {
-            const now = new Date();
-            const diff = now - state.startTime;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const now = new Date()
+            const diff = now - state.startTime
+            const hours = Math.floor(diff / (1000 * 60 * 60))
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000)
             
-            timerElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        };
+            timerElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+        }
         
-        updateTimerDisplay();
+        updateTimerDisplay()
         
         if (!state.timerInterval) {
-            state.timerInterval = setInterval(updateTimerDisplay, 1000);
+            state.timerInterval = setInterval(updateTimerDisplay, 1000)
         }
     } else {
-        timerElement.textContent = '00:00:00';
+        timerElement.textContent = '00:00:00'
         if (state.timerInterval) {
-            clearInterval(state.timerInterval);
-            state.timerInterval = null;
+            clearInterval(state.timerInterval)
+            state.timerInterval = null
         }
     }
 }
 
 function updateCurrentEarnings() {
-    const earningsElement = document.getElementById('activeEarnings');
-    if (!earningsElement || !state.isShiftActive || !state.startTime) return;
+    const earningsElement = document.getElementById('activeEarnings')
+    if (!earningsElement || !state.isShiftActive || !state.startTime) return
 
     const updateEarnings = () => {
-        const now = new Date();
-        const diff = now - state.startTime;
-        const durationHours = diff / (1000 * 60 * 60);
+        const now = new Date()
+        const diff = now - state.startTime
+        const durationHours = diff / (1000 * 60 * 60)
         
         const totalScooters = Object.values(state.parkingData).reduce((sum, parking) => {
-            return sum + parking.yandex + parking.sunrent;
-        }, 0);
+            return sum + parking.yandex + parking.sunrent
+        }, 0)
         
-        let rate = 100;
-        if (totalScooters >= 100) rate = 150;
-        else if (totalScooters >= 60) rate = 120;
+        let rate = 100
+        if (totalScooters >= 100) rate = 150
+        else if (totalScooters >= 60) rate = 120
         
-        const rateElement = document.getElementById('currentRate');
+        const rateElement = document.getElementById('currentRate')
         if (rateElement) {
-            rateElement.textContent = rate;
+            rateElement.textContent = rate
         }
         
-        const currentEarnings = (durationHours * rate).toFixed(2);
-        earningsElement.textContent = currentEarnings;
-    };
+        const currentEarnings = (durationHours * rate).toFixed(2)
+        earningsElement.textContent = currentEarnings
+    }
     
-    updateEarnings();
+    updateEarnings()
     
     if (!state.earningsInterval) {
-        state.earningsInterval = setInterval(updateEarnings, 100);
+        state.earningsInterval = setInterval(updateEarnings, 100)
     }
 }
 
 function updateParkingCounters() {
     Object.entries(state.parkingData).forEach(([parking, data]) => {
-        const yandexCount = document.querySelector(`#${parking} .yandex-count`);
-        const sunrentCount = document.querySelector(`#${parking} .sunrent-count`);
+        const yandexCount = document.querySelector(`#${parking} .yandex-count`)
+        const sunrentCount = document.querySelector(`#${parking} .sunrent-count`)
         
-        if (yandexCount) yandexCount.textContent = data.yandex;
-        if (sunrentCount) sunrentCount.textContent = data.sunrent;
-    });
+        if (yandexCount) yandexCount.textContent = data.yandex
+        if (sunrentCount) sunrentCount.textContent = data.sunrent
+    })
     
-    updateTotalScooters();
+    updateTotalScooters()
 }
 
 function updateTotalScooters() {
-    const totalElement = document.getElementById('totalScooters');
-    if (!totalElement) return;
+    const totalElement = document.getElementById('totalScooters')
+    if (!totalElement) return
     
     const total = Object.values(state.parkingData).reduce((sum, parking) => {
-        return sum + parking.yandex + parking.sunrent;
-    }, 0);
+        return sum + parking.yandex + parking.sunrent
+    }, 0)
     
-    totalElement.textContent = total;
+    totalElement.textContent = total
     
-    const rateElement = document.getElementById('currentRate');
+    const rateElement = document.getElementById('currentRate')
     if (rateElement) {
-        let rate = 100;
-        if (total >= 100) rate = 150;
-        else if (total >= 60) rate = 120;
-        rateElement.textContent = rate;
+        let rate = 100
+        if (total >= 100) rate = 150
+        else if (total >= 60) rate = 120
+        rateElement.textContent = rate
     }
 }
 
 function updateParkingSelector() {
-    const tabs = document.querySelectorAll('.parking-tab');
-    const cards = document.querySelectorAll('.parking-card');
+    const tabs = document.querySelectorAll('.parking-tab')
+    const cards = document.querySelectorAll('.parking-card')
     
     tabs.forEach(tab => {
-        const parkingId = tab.dataset.parking;
-        tab.classList.toggle('active', parkingId === state.selectedParking);
-    });
+        const parkingId = tab.dataset.parking
+        tab.classList.toggle('active', parkingId === state.selectedParking)
+    })
     
     cards.forEach(card => {
-        const parkingId = card.id;
-        card.classList.toggle('active', parkingId === state.selectedParking);
-    });
+        const parkingId = card.id
+        card.classList.toggle('active', parkingId === state.selectedParking)
+    })
 }
 
 function updateHistoryDisplay() {
-    const historyContainer = document.getElementById('historyList');
-    if (!historyContainer) return;
+    const historyContainer = document.getElementById('historyList')
+    if (!historyContainer) return
 
-    // Очищаем контейнер
-    historyContainer.innerHTML = '';
+    historyContainer.innerHTML = ''
     
-    // Проверяем, есть ли смены в истории
     if (state.shiftHistory.length === 0) {
-        historyContainer.innerHTML = '<div class="no-shifts">Нет завершенных смен</div>';
-        return;
+        historyContainer.innerHTML = '<div class="no-shifts">Нет завершенных смен</div>'
+        return
     }
 
     state.shiftHistory.forEach((shift, index) => {
-        const historyContent = document.createElement('div');
-        historyContent.className = 'history-item';
+        const historyContent = document.createElement('div')
+        historyContent.className = 'history-item'
         
-        const shiftHeader = document.createElement('div');
-        shiftHeader.className = 'shift-header';
+        const shiftHeader = document.createElement('div')
+        shiftHeader.className = 'shift-header'
         
-        const shiftTitle = document.createElement('h4');
-        shiftTitle.textContent = `${new Date(shift.startTime).toLocaleString()} - ${new Date(shift.endTime).toLocaleString()}`;
+        const shiftTitle = document.createElement('h4')
+        shiftTitle.textContent = `${new Date(shift.startTime).toLocaleString()} - ${new Date(shift.endTime).toLocaleString()}`
         
-        const shiftRate = document.createElement('span');
-        shiftRate.className = 'shift-rate';
-        shiftRate.textContent = `Ставка: ${shift.rate || 100} с. /ч`;
+        const shiftRate = document.createElement('span')
+        shiftRate.className = 'shift-rate'
+        shiftRate.textContent = `Ставка: ${shift.rate || 100} с. /ч`
         
-        const shiftDuration = document.createElement('div');
-        shiftDuration.className = 'shift-duration';
-        shiftDuration.innerHTML = `<i class="fas fa-clock"></i> ${shift.duration}`;
+        const shiftDuration = document.createElement('div')
+        shiftDuration.className = 'shift-duration'
+        shiftDuration.innerHTML = `<i class="fas fa-clock"></i> ${shift.duration}`
         
-        const shiftScooters = document.createElement('div');
-        shiftScooters.className = 'shift-scooters';
-        shiftScooters.innerHTML = `<i class="fas fa-scooter"></i> Всего самокатов: ${shift.totalScooters}`;
+        const shiftScooters = document.createElement('div')
+        shiftScooters.className = 'shift-scooters'
+        shiftScooters.innerHTML = `<i class="fas fa-scooter"></i> Всего самокатов: ${shift.totalScooters}`
         
-        const shiftEarnings = document.createElement('div');
-        shiftEarnings.className = 'shift-earnings';
-        shiftEarnings.innerHTML = `<i class="fas fa-money-bill-wave"></i> Заработок: ${Number(shift.earnings).toFixed(2)} <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Flag_of_Kyrgyzstan.svg" alt="KGS" class="currency-flag">`;
+        const shiftEarnings = document.createElement('div')
+        shiftEarnings.className = 'shift-earnings'
+        shiftEarnings.innerHTML = `<i class="fas fa-money-bill-wave"></i> Заработок: ${Number(shift.earnings).toFixed(2)} <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Flag_of_Kyrgyzstan.svg" alt="KGS" class="currency-flag">`
         
-        const parkingDetails = shift.parkingDetails || {};
-        const repairs = shift.repairs || { yandex: [], sunrent: [] };
+        const parkingDetails = shift.parkingDetails || {}
+        const repairs = shift.repairs || { yandex: [], sunrent: [] }
         
         const parkingDetailsHtml = Object.entries(parkingDetails).length > 0 
             ? Object.entries(parkingDetails)
@@ -267,13 +263,13 @@ function updateHistoryDisplay() {
                         ${data.sunrent > 0 ? `<span class="sunrent-count">SunRent: ${data.sunrent}</span>` : ''}
                     </div>
                 `).join('')
-            : '<div class="parking-detail">Нет данных о парковках</div>';
+            : '<div class="parking-detail">Нет данных о парковках</div>'
         
         const repairsHtml = createRepairHistoryHtml(
             repairs,
             shift.repairStatuses || { yandex: {}, sunrent: {} },
             index
-        );
+        )
         
         historyContent.innerHTML = `
             <div class="history-content">
@@ -299,127 +295,121 @@ function updateHistoryDisplay() {
             <button class="delete-shift" data-index="${index}" onclick="deleteShift(${index})">
                 <i class="fas fa-trash"></i> Удалить
             </button>
-        `;
+        `
         
-        historyContainer.appendChild(historyContent);
-    });
+        historyContainer.appendChild(historyContent)
+    })
     
-    // Удаляем старые обработчики событий
     document.querySelectorAll('.delete-shift').forEach(button => {
-        button.removeEventListener('click', deleteShift);
-    });
+        button.removeEventListener('click', deleteShift)
+    })
 
-    // Обработчики для кнопок раскрытия списка замен
     document.querySelectorAll('.toggle-repairs').forEach(button => {
         button.addEventListener('click', (e) => {
-            const details = e.target.closest('.repairs-section').querySelector('.repairs-details');
-            const icon = button.querySelector('i');
+            const details = e.target.closest('.repairs-section').querySelector('.repairs-details')
+            const icon = button.querySelector('i')
             
             if (details.style.display === 'none') {
-                details.style.display = 'block';
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
+                details.style.display = 'block'
+                icon.classList.remove('fa-chevron-down')
+                icon.classList.add('fa-chevron-up')
             } else {
-                details.style.display = 'none';
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
+                details.style.display = 'none'
+                icon.classList.remove('fa-chevron-up')
+                icon.classList.add('fa-chevron-down')
             }
-        });
-    });
+        })
+    })
 
-    // Добавляем обработчик для кнопки "На склад"
     document.addEventListener('click', (e) => {
-        const markWarehouseBtn = e.target.closest('.mark-warehouse-btn');
+        const markWarehouseBtn = e.target.closest('.mark-warehouse-btn')
         if (markWarehouseBtn) {
-            e.preventDefault(); // Предотвращаем всплытие события
-            e.stopPropagation(); // Останавливаем всплытие события
+            e.preventDefault()
+            e.stopPropagation()
             
-            const type = markWarehouseBtn.dataset.type;
-            const number = markWarehouseBtn.dataset.number;
-            
-            // Проверяем, не находится ли самокат уже на складе
+            const type = markWarehouseBtn.dataset.type
+            const number = markWarehouseBtn.dataset.number
             if (state.repairStatuses[type][number]?.status === 'warehouse') {
-                return;
+                return
             }
             
-            const comment = prompt('Укажите причину отправки на склад:');
-            if (comment !== null) { // Проверяем, что пользователь не отменил ввод
-                markRepairToWarehouse(type, number, comment);
+            const comment = prompt('Укажите причину отправки на склад:')
+            if (comment !== null) { 
+                markRepairToWarehouse(type, number, comment)
             }
         }
-    });
+    })
 
-    // Добавляем обработчики для вкладок в истории
-    initializeHistoryTabs();
+    initializeHistoryTabs()
 }
 
 function startShift() {
-    if (state.isShiftActive) return;
+    if (state.isShiftActive) return
     
-    state.isShiftActive = true;
-    state.startTime = new Date();
-    state.selectedParking = null;
-    initializeParkingData();
+    state.isShiftActive = true
+    state.startTime = new Date()
+    state.selectedParking = null
+    initializeParkingData()
     
-    const activeShiftEarnings = document.getElementById('activeShiftEarnings');
+    const activeShiftEarnings = document.getElementById('activeShiftEarnings')
     if (activeShiftEarnings) {
-        activeShiftEarnings.style.display = 'block';
+        activeShiftEarnings.style.display = 'block'
     }
     
-    updateUI();
-    saveState();
+    updateUI()
+    saveState()
 }
 
 function updateTotalStats() {
-    const totalShiftsElement = document.getElementById('totalShifts');
-    const totalEarningsElement = document.getElementById('totalEarnings');
+    const totalShiftsElement = document.getElementById('totalShifts')
+    const totalEarningsElement = document.getElementById('totalEarnings')
     
-    if (!totalShiftsElement || !totalEarningsElement) return;
+    if (!totalShiftsElement || !totalEarningsElement) return
     
-    const totalShifts = state.shiftHistory.length;
-    const totalEarnings = state.shiftHistory.reduce((sum, shift) => sum + shift.earnings, 0);
+    const totalShifts = state.shiftHistory.length
+    const totalEarnings = state.shiftHistory.reduce((sum, shift) => sum + shift.earnings, 0)
     
-    totalShiftsElement.textContent = totalShifts;
-    totalEarningsElement.textContent = totalEarnings.toFixed(2);
+    totalShiftsElement.textContent = totalShifts
+    totalEarningsElement.textContent = totalEarnings.toFixed(2)
 }
 
 function endShift() {
-    if (!state.isShiftActive) return;
+    if (!state.isShiftActive) return
     
     if (state.earningsInterval) {
-        clearInterval(state.earningsInterval);
-        state.earningsInterval = null;
+        clearInterval(state.earningsInterval)
+        state.earningsInterval = null
     }
     
-    const activeShiftEarnings = document.getElementById('activeShiftEarnings');
+    const activeShiftEarnings = document.getElementById('activeShiftEarnings')
     if (activeShiftEarnings) {
-        activeShiftEarnings.style.display = 'none';
+        activeShiftEarnings.style.display = 'none'
     }
     
-    const endTime = new Date();
-    const diff = endTime - state.startTime;
-    const durationHours = diff / (1000 * 60 * 60);
-    const duration = durationHours;
+    const endTime = new Date()
+    const diff = endTime - state.startTime
+    const durationHours = diff / (1000 * 60 * 60)
+    const duration = durationHours
     
     const totalScooters = Object.values(state.parkingData).reduce((sum, parking) => {
-        return sum + parking.yandex + parking.sunrent;
-    }, 0);
+        return sum + parking.yandex + parking.sunrent
+    }, 0)
     
-    let rate = 100;
-    if (totalScooters >= 100) rate = 150;
-    else if (totalScooters >= 60) rate = 120;
+    let rate = 100
+    if (totalScooters >= 100) rate = 150
+    else if (totalScooters >= 60) rate = 120
     
-    const earnings = duration * rate;
+    const earnings = duration * rate
     
-    const parkingDetails = {};
+    const parkingDetails = {}
     Object.entries(state.parkingData).forEach(([parking, data]) => {
         if (data.yandex > 0 || data.sunrent > 0) {
             parkingDetails[parking] = {
                 yandex: data.yandex,
                 sunrent: data.sunrent
-            };
+            }
         }
-    });
+    })
     
     state.shiftHistory.push({
         startTime: state.startTime,
@@ -431,140 +421,136 @@ function endShift() {
         repairs: { ...state.repairs },
         repairStatuses: { ...state.repairStatuses },
         rate
-    });
+    })
     
-    state.isShiftActive = false;
-    state.startTime = null;
-    state.selectedParking = null;
-    initializeParkingData();
+    state.isShiftActive = false
+    state.startTime = null
+    state.selectedParking = null
+    initializeParkingData()
     
-    updateUI();
-    updateTotalStats();
-    saveState();
+    updateUI()
+    updateTotalStats()
+    saveState()
 }
 
 function selectParking(parkingId) {
-    state.selectedParking = parkingId;
-    updateParkingSelector();
-    saveState();
+    state.selectedParking = parkingId
+    updateParkingSelector()
+    saveState()
 }
 
 function updateScooterCount(parkingId, type, delta) {
-    if (!state.isShiftActive) return;
+    if (!state.isShiftActive) return
     
-    const parking = state.parkingData[parkingId];
-    if (!parking) return;
+    const parking = state.parkingData[parkingId]
+    if (!parking) return
     
-    const newCount = Math.max(0, parking[type] + delta);
-    parking[type] = newCount;
+    const newCount = Math.max(0, parking[type] + delta)
+    parking[type] = newCount
     
-    updateParkingCounters();
-    saveState();
+    updateParkingCounters()
+    saveState()
 }
 
 function addRepair(type, scooterNumber) {
-    if (!state.isShiftActive) return;
+    if (!state.isShiftActive) return
     
     if (!state.repairs[type].includes(scooterNumber)) {
-        state.repairs[type].push(scooterNumber);
+        state.repairs[type].push(scooterNumber)
         state.repairStatuses[type][scooterNumber] = {
             status: 'repairing',
             comment: '',
             timestamp: new Date().toISOString()
-        };
-        updateTotalScooters();
-        saveState();
+        }
+        updateTotalScooters()
+        saveState()
     }
 }
 
 function markRepairFixed(type, scooterNumber) {
-    if (!state.isShiftActive) return;
+    if (!state.isShiftActive) return
     
-    const index = state.repairs[type].indexOf(scooterNumber);
+    const index = state.repairs[type].indexOf(scooterNumber)
     if (index > -1) {
-        // Обновляем статус, но не удаляем из списка
         state.repairStatuses[type][scooterNumber] = {
             status: 'fixed',
             timestamp: new Date().toISOString()
-        };
-        
-        // Добавляем самокат в общее количество
-        const parkings = Object.keys(state.parkingData);
+        }
+                const parkings = Object.keys(state.parkingData)
         if (parkings.length > 0) {
-            const targetParking = state.selectedParking || parkings[0];
+            const targetParking = state.selectedParking || parkings[0]
             if (!state.parkingData[targetParking]) {
                 state.parkingData[targetParking] = {
                     yandex: 0,
                     sunrent: 0
-                };
+                }
             }
-            state.parkingData[targetParking][type] = (state.parkingData[targetParking][type] || 0) + 1;
+            state.parkingData[targetParking][type] = (state.parkingData[targetParking][type] || 0) + 1
         }
         
-        updateParkingCounters();
-        updateTotalScooters();
-        updateRepairsList();
-        saveState();
+        updateParkingCounters()
+        updateTotalScooters()
+        updateRepairsList()
+        saveState()
     }
 }
 
 function markRepairToWarehouse(type, scooterNumber, comment) {
-    if (!state.isShiftActive) return;
+    if (!state.isShiftActive) return
     
-    const index = state.repairs[type].indexOf(scooterNumber);
+    const index = state.repairs[type].indexOf(scooterNumber)
     if (index > -1) {
-        // Обновляем статус на "warehouse"
         state.repairStatuses[type][scooterNumber] = {
             status: 'warehouse',
             comment: comment || '',
             timestamp: new Date().toISOString()
-        };
+        }
         
-        // Добавляем самокат в общее количество
-        const parkings = Object.keys(state.parkingData);
+        const parkings = Object.keys(state.parkingData)
         if (parkings.length > 0) {
-            const targetParking = state.selectedParking || parkings[0];
+            const targetParking = state.selectedParking || parkings[0]
             if (!state.parkingData[targetParking]) {
                 state.parkingData[targetParking] = {
                     yandex: 0,
                     sunrent: 0
-                };
+                }
             }
-            state.parkingData[targetParking][type] = (state.parkingData[targetParking][type] || 0) + 1;
+            state.parkingData[targetParking][type] = (state.parkingData[targetParking][type] || 0) + 1
         }
         
-        updateParkingCounters();
-        updateTotalScooters();
-        updateRepairsList();
-        saveState();
+        updateParkingCounters()
+        updateTotalScooters()
+        updateRepairsList()
+        saveState()
     }
 }
 
 function createRepairHistoryHtml(repairs, repairStatuses, index) {
-    const hasRepairs = repairs.yandex.length > 0 || repairs.sunrent.length > 0;
-    if (!hasRepairs) return '';
+    const hasRepairs = repairs.yandex.length > 0 || repairs.sunrent.length > 0
+    if (!hasRepairs) return ''
 
-    // Подсчет самокатов по статусам и типам
     const countByStatusAndType = (type) => {
         const counts = {
             repairing: 0,
             fixed: 0,
             warehouse: 0
-        };
+        }
         repairs[type].forEach(num => {
-            const status = repairStatuses[type][num]?.status || 'repairing';
-            counts[status]++;
-        });
-        return counts;
-    };
+            const status = repairStatuses[type][num]?.status || 'repairing'
+            counts[status]++
+        })
+        return counts
+    }
 
-    const yandexCounts = countByStatusAndType('yandex');
-    const sunrentCounts = countByStatusAndType('sunrent');
+    const yandexCounts = countByStatusAndType('yandex')
+    const sunrentCounts = countByStatusAndType('sunrent')
 
-    // Функция для создания списка самокатов
     const createScootersList = (type) => {
-        const scooters = repairs[type];
-        if (scooters.length === 0) return '';
+        const scooters = repairs[type]
+        if (scooters.length === 0) return ''
+
+        // Используем правильные counts для каждого типа
+        const counts = type === 'yandex' ? yandexCounts : sunrentCounts
 
         return `
             <div class="repair-group">
@@ -572,22 +558,22 @@ function createRepairHistoryHtml(repairs, repairStatuses, index) {
                     <span class="repair-type">${type === 'yandex' ? 'Yandex' : 'SunRent'}</span>
                     <div class="repair-type-counts">
                         <span class="repairing-count">
-                            <i class="fas fa-tools"></i> В ремонте: ${yandexCounts.repairing}
+                            <i class="fas fa-tools"></i> В ремонте: ${counts.repairing}
                         </span>
                         <span class="fixed-count">
-                            <i class="fas fa-check"></i> Исправлено: ${yandexCounts.fixed}
+                            <i class="fas fa-check"></i> Исправлено: ${counts.fixed}
                         </span>
                         <span class="warehouse-count">
-                            <i class="fas fa-warehouse"></i> На замену: ${yandexCounts.warehouse}
+                            <i class="fas fa-warehouse"></i> На замену: ${counts.warehouse}
                         </span>
                     </div>
                 </div>
                 <div class="repair-numbers-list">
                     ${scooters.map(num => {
-                        const status = repairStatuses[type][num] || { status: 'repairing' };
+                        const status = repairStatuses[type][num] || { status: 'repairing' }
                         const statusText = status.status === 'fixed' ? 'Исправлено' : 
-                                         status.status === 'warehouse' ? 'На склад' : 'В ремонте';
-                        const statusClass = status.status;
+                                         status.status === 'warehouse' ? 'На склад' : 'В ремонте'
+                        const statusClass = status.status
                         return `
                             <div class="repair-number ${statusClass}">
                                 <div class="repair-info">
@@ -596,12 +582,12 @@ function createRepairHistoryHtml(repairs, repairStatuses, index) {
                                     ${status.comment ? `<span class="repair-comment">${status.comment}</span>` : ''}
                                 </div>
                             </div>
-                        `;
+                        `
                     }).join('')}
                 </div>
             </div>
-        `;
-    };
+        `
+    }
 
     return `
         <div class="repairs-section">
@@ -627,45 +613,42 @@ function createRepairHistoryHtml(repairs, repairStatuses, index) {
                     <i class="fas fa-chevron-down"></i>
                 </button>
             </div>
-            <div class="repairs-details" style="display: none;">
+            <div class="repairs-details" style="display: none">
                 <div class="repairs-content">
                     ${createScootersList('yandex')}
                     ${createScootersList('sunrent')}
                 </div>
             </div>
         </div>
-    `;
+    `
 }
 
-// Добавляем обработчик для переключения вкладок в истории
 function initializeHistoryTabs() {
     document.querySelectorAll('.repair-tab').forEach(tab => {
         tab.addEventListener('click', (e) => {
-            const tabName = e.target.closest('.repair-tab').dataset.tab;
-            const repairsSection = e.target.closest('.repairs-section');
+            const tabName = e.target.closest('.repair-tab').dataset.tab
+            const repairsSection = e.target.closest('.repairs-section')
             
-            // Обновляем активную вкладку
             repairsSection.querySelectorAll('.repair-tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.tab === tabName);
-            });
+                t.classList.toggle('active', t.dataset.tab === tabName)
+            })
             
-            // Показываем соответствующий контент
             repairsSection.querySelectorAll('.repair-tab-content').forEach(content => {
-                content.classList.toggle('active', content.dataset.tabContent === tabName);
-            });
-        });
-    });
+                content.classList.toggle('active', content.dataset.tabContent === tabName)
+            })
+        })
+    })
 }
 
 function updateRepairsList() {
-    const yandexList = document.getElementById('yandexRepairsList');
-    const sunrentList = document.getElementById('sunrentRepairsList');
+    const yandexList = document.getElementById('yandexRepairsList')
+    const sunrentList = document.getElementById('sunrentRepairsList')
     
     const createRepairElement = (type, number) => {
-        const status = state.repairStatuses[type][number] || { status: 'repairing' };
-        const statusClass = status.status;
+        const status = state.repairStatuses[type][number] || { status: 'repairing' }
+        const statusClass = status.status
         const statusText = status.status === 'fixed' ? 'Исправлено' : 
-                          status.status === 'warehouse' ? 'На склад' : 'В ремонте';
+                          status.status === 'warehouse' ? 'На склад' : 'В ремонте'
         
         return `
             <div class="repair-number ${statusClass}">
@@ -694,202 +677,175 @@ function updateRepairsList() {
                     </div>
                 `}
             </div>
-        `;
-    };
+        `
+    }
     
     if (yandexList) {
-        yandexList.innerHTML = state.repairs.yandex.map(number => createRepairElement('yandex', number)).join('');
+        yandexList.innerHTML = state.repairs.yandex.map(number => createRepairElement('yandex', number)).join('')
     }
     
     if (sunrentList) {
-        sunrentList.innerHTML = state.repairs.sunrent.map(number => createRepairElement('sunrent', number)).join('');
+        sunrentList.innerHTML = state.repairs.sunrent.map(number => createRepairElement('sunrent', number)).join('')
     }
 
-    // Добавляем обработчики для кнопок
     document.querySelectorAll('.mark-fixed-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const type = button.dataset.type;
-            const number = button.dataset.number;
-            markRepairFixed(type, number);
-        });
-    });
+            e.preventDefault()
+            e.stopPropagation()
+            const type = button.dataset.type
+            const number = button.dataset.number
+            markRepairFixed(type, number)
+        })
+    })
 
     document.querySelectorAll('.mark-warehouse-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const type = button.dataset.type;
-            const number = button.dataset.number;
-            const comment = prompt('Укажите причину замены:');
+            e.preventDefault()
+            e.stopPropagation()
+            const type = button.dataset.type
+            const number = button.dataset.number
+            const comment = prompt('Укажите причину замены:')
             if (comment !== null) {
-                markRepairToWarehouse(type, number, comment);
+                markRepairToWarehouse(type, number, comment)
             }
-        });
-    });
+        })
+    })
 
-    // Добавляем обработчики для кнопок отмены и удаления
     document.querySelectorAll('.cancel-repair-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault()
+            e.stopPropagation()
             if (confirm('Вы уверены, что хотите отменить добавление этого самоката на исправление?')) {
-                const type = button.dataset.type;
-                const number = button.dataset.number;
-                removeRepair(type, number);
+                const type = button.dataset.type
+                const number = button.dataset.number
+                removeRepair(type, number)
             }
-        });
-    });
+        })
+    })
 
     document.querySelectorAll('.remove-repair-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault()
+            e.stopPropagation()
             if (confirm('Вы уверены, что хотите удалить этот самокат из списка исправлений?')) {
-                const type = button.dataset.type;
-                const number = button.dataset.number;
-                removeRepair(type, number);
+                const type = button.dataset.type
+                const number = button.dataset.number
+                removeRepair(type, number)
             }
-        });
-    });
+        })
+    })
 }
 
 function initializeInputHandlers() {
-    // Обработчики для кнопок добавления исправлений
     document.querySelectorAll('.add-repair-btn').forEach(button => {
-        // Удаляем старые обработчики
-        button.removeEventListener('click', handleAddRepair);
-        // Добавляем новый обработчик
-        button.addEventListener('click', handleAddRepair);
-    });
+        button.removeEventListener('click', handleAddRepair)
+        button.addEventListener('click', handleAddRepair)
+    })
     
-    // Обработчики для полей ввода исправлений
     document.querySelectorAll('.repair-input').forEach(input => {
-        // Удаляем старые обработчики
-        input.removeEventListener('keypress', handleRepairInput);
-        // Добавляем новый обработчик
-        input.addEventListener('keypress', handleRepairInput);
-    });
+        input.removeEventListener('keypress', handleRepairInput)
+        input.addEventListener('keypress', handleRepairInput)
+    })
 }
 
-// Обработчики событий
 function handleAddRepair(e) {
-    const type = e.target.closest('.add-repair-btn').dataset.type;
-    const input = document.getElementById(`${type}RepairInput`);
-    const number = input.value.trim();
+    const type = e.target.closest('.add-repair-btn').dataset.type
+    const input = document.getElementById(`${type}RepairInput`)
+    const number = input.value.trim()
     
     if (number) {
-        addRepair(type, number);
-        input.value = '';
-        updateRepairsList();
+        addRepair(type, number)
+        input.value = ''
+        updateRepairsList()
     }
 }
 
 function handleRepairInput(e) {
     if (e.key === 'Enter') {
-        const type = e.target.id.replace('RepairInput', '');
-        const number = e.target.value.trim();
+        const type = e.target.id.replace('RepairInput', '')
+        const number = e.target.value.trim()
         
         if (number) {
-            addRepair(type, number);
-            e.target.value = '';
-            updateRepairsList();
+            addRepair(type, number)
+            e.target.value = ''
+            updateRepairsList()
         }
     }
 }
 
 function initializeEventListeners() {
-    const startBtn = document.getElementById('startShift');
-    const endBtn = document.getElementById('endShift');
+    const startBtn = document.getElementById('startShift')
+    const endBtn = document.getElementById('endShift')
     
     if (startBtn) {
-        startBtn.addEventListener('click', startShift);
+        startBtn.addEventListener('click', startShift)
     }
     
     if (endBtn) {
-        endBtn.addEventListener('click', endShift);
+        endBtn.addEventListener('click', endShift)
     }
     
     document.querySelectorAll('.parking-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-            selectParking(tab.dataset.parking);
-        });
-    });
+            selectParking(tab.dataset.parking)
+        })
+    })
     
     document.querySelectorAll('.select-parking').forEach(button => {
         button.addEventListener('click', (e) => {
-            const parkingId = e.target.closest('.parking-card').id;
-            selectParking(parkingId);
-        });
-    });
+            const parkingId = e.target.closest('.parking-card').id
+            selectParking(parkingId)
+        })
+    })
     
     document.querySelectorAll('.counter-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            const counter = e.target.closest('.counter-group');
-            const parkingId = counter.closest('.parking-card').id;
-            const type = counter.classList.contains('yandex') ? 'yandex' : 'sunrent';
-            const delta = button.classList.contains('plus') ? 1 : -1;
+            const counter = e.target.closest('.counter-group')
+            const parkingId = counter.closest('.parking-card').id
+            const type = counter.classList.contains('yandex') ? 'yandex' : 'sunrent'
+            const delta = button.classList.contains('plus') ? 1 : -1
             
-            updateScooterCount(parkingId, type, delta);
-        });
-    });
+            updateScooterCount(parkingId, type, delta)
+        })
+    })
     
-    // Инициализируем обработчики для инпутов
-    initializeInputHandlers();
+    initializeInputHandlers()
     
-    // Обработчики удаления замен
     document.addEventListener('click', (e) => {
-        const removeBtn = e.target.closest('.remove-replacement');
+        const removeBtn = e.target.closest('.remove-replacement')
         if (removeBtn) {
-            const type = removeBtn.dataset.type;
-            const number = removeBtn.dataset.number;
-            removeRepair(type, number);
-            updateRepairsList();
+            const type = removeBtn.dataset.type
+            const number = removeBtn.dataset.number
+            removeRepair(type, number)
+            updateRepairsList()
         }
-    });
+    })
     
-    // Обработчики для кнопок "Исправлено"
     document.addEventListener('click', (e) => {
-        const markFixedBtn = e.target.closest('.mark-fixed-btn');
+        const markFixedBtn = e.target.closest('.mark-fixed-btn')
         if (markFixedBtn) {
-            const type = markFixedBtn.dataset.type;
-            const number = markFixedBtn.dataset.number;
-            markRepairFixed(type, number);
-            updateRepairsList();
+            const type = markFixedBtn.dataset.type
+            const number = markFixedBtn.dataset.number
+            markRepairFixed(type, number)
+            updateRepairsList()
         }
-    });
+    })
 }
 
-// Проверка загрузки Font Awesome
-function checkFontAwesome() {
-    const testIcon = document.createElement('i');
-    testIcon.className = 'fas fa-play';
-    document.body.appendChild(testIcon);
-    const computedStyle = window.getComputedStyle(testIcon);
-    const fontFamily = computedStyle.getPropertyValue('font-family');
-    document.body.removeChild(testIcon);
-    
-    if (!fontFamily.includes('Font Awesome')) {
-        // Если Font Awesome не загрузился, показываем fallback иконки
-        document.querySelectorAll('.btn-icon').forEach(icon => {
-            icon.style.display = 'none';
-        });
-        document.querySelectorAll('.icon-fallback').forEach(icon => {
-            icon.style.display = 'inline-block';
-        });
-    } else {
-        // Если Font Awesome загрузился, скрываем fallback иконки
-        document.querySelectorAll('.icon-fallback').forEach(icon => {
-            icon.style.display = 'none';
-        });
-    }
+// --- Переключение темы ---
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+    document.getElementById('toggleThemeBtn').textContent = theme === 'dark' ? '☀️' : '🌙'
 }
 
-// Инициализация приложения
-function initializeApp() {
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light'
+    setTheme(current === 'dark' ? 'light' : 'dark')
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     try {
-        // Проверяем наличие необходимых элементов
         const requiredElements = [
             'startShift',
             'endShift',
@@ -900,46 +856,39 @@ function initializeApp() {
             'historyList',
             'totalShifts',
             'totalEarnings'
-        ];
+        ]
 
-        const missingElements = requiredElements.filter(id => !document.getElementById(id));
+        const missingElements = requiredElements.filter(id => !document.getElementById(id))
         if (missingElements.length > 0) {
-            throw new Error(`Отсутствуют необходимые элементы: ${missingElements.join(', ')}`);
+            throw new Error(`Отсутствуют необходимые элементы: ${missingElements.join(', ')}`)
         }
 
-        // Проверяем загрузку Font Awesome
-        checkFontAwesome();
+        // checkFontAwesome()
         
-        // Инициализация Telegram WebApp
         if (window.Telegram && window.Telegram.WebApp) {
             try {
-                const tg = window.Telegram.WebApp;
-                tg.expand();
-                tg.enableClosingConfirmation();
+                const tg = window.Telegram.WebApp
+                tg.expand()
+                tg.enableClosingConfirmation()
                 
-                // Применяем тему Telegram
-                const themeParams = tg.themeParams || {};
-                document.documentElement.style.setProperty('--tg-theme-bg-color', themeParams.bg_color || '#ffffff');
-                document.documentElement.style.setProperty('--tg-theme-text-color', themeParams.text_color || '#000000');
-                document.documentElement.style.setProperty('--tg-theme-hint-color', themeParams.hint_color || '#999999');
-                document.documentElement.style.setProperty('--tg-theme-link-color', themeParams.link_color || '#2481cc');
-                document.documentElement.style.setProperty('--tg-theme-button-color', themeParams.button_color || '#2481cc');
-                document.documentElement.style.setProperty('--tg-theme-button-text-color', themeParams.button_text_color || '#ffffff');
+                const themeParams = tg.themeParams || {}
+                document.documentElement.style.setProperty('--tg-theme-bg-color', themeParams.bg_color || '#ffffff')
+                document.documentElement.style.setProperty('--tg-theme-text-color', themeParams.text_color || '#000000')
+                document.documentElement.style.setProperty('--tg-theme-hint-color', themeParams.hint_color || '#999999')
+                document.documentElement.style.setProperty('--tg-theme-link-color', themeParams.link_color || '#2481cc')
+                document.documentElement.style.setProperty('--tg-theme-button-color', themeParams.button_color || '#2481cc')
+                document.documentElement.style.setProperty('--tg-theme-button-text-color', themeParams.button_text_color || '#ffffff')
             } catch (tgError) {
-                console.warn('Ошибка инициализации Telegram WebApp:', tgError);
-                // Продолжаем работу без Telegram WebApp
+                console.warn('Ошибка инициализации Telegram WebApp:', tgError)
             }
         }
         
-        // Инициализируем начальное состояние
-        initializeParkingData();
+        initializeParkingData()
         
-        // Загружаем сохраненное состояние
         try {
-            loadState();
+            loadState()
         } catch (loadError) {
-            console.error('Ошибка загрузки состояния:', loadError);
-            // Сбрасываем состояние при ошибке загрузки
+            console.error('Ошибка загрузки состояния:', loadError)
             state = {
                 isShiftActive: false,
                 startTime: null,
@@ -948,74 +897,65 @@ function initializeApp() {
                 shiftHistory: [],
                 repairs: { yandex: [], sunrent: [] },
                 repairStatuses: { yandex: {}, sunrent: {} }
-            };
-            initializeParkingData();
+            }
+            initializeParkingData()
         }
         
-        // Инициализируем обработчики событий
         try {
-            initializeEventListeners();
+            initializeEventListeners()
         } catch (eventError) {
-            console.error('Ошибка инициализации обработчиков событий:', eventError);
-            throw new Error('Не удалось инициализировать обработчики событий');
+            console.error('Ошибка инициализации обработчиков событий:', eventError)
+            throw new Error('Не удалось инициализировать обработчики событий')
         }
         
-        // Обновляем UI
         try {
-            updateUI();
+            updateUI()
         } catch (uiError) {
-            console.error('Ошибка обновления интерфейса:', uiError);
-            throw new Error('Не удалось обновить интерфейс');
+            console.error('Ошибка обновления интерфейса:', uiError)
+            throw new Error('Не удалось обновить интерфейс')
         }
         
-        // Сохраняем состояние каждые 5 секунд
-        setInterval(saveState, 5000);
+        setInterval(saveState, 5000)
         
-        // Скрываем splash screen
-        const splashScreen = document.querySelector('.splash-screen');
+        const splashScreen = document.querySelector('.splash-screen')
         if (splashScreen) {
             setTimeout(() => {
-                splashScreen.style.display = 'none';
-            }, 1000);
+                splashScreen.style.display = 'none'
+            }, 1000)
         }
+
+        // Восстановить тему из localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light'
+        setTheme(savedTheme)
+        document.getElementById('toggleThemeBtn').addEventListener('click', toggleTheme)
     } catch (error) {
-        console.error('Критическая ошибка при инициализации приложения:', error);
+        console.error('Критическая ошибка при инициализации приложения:', error)
         // Показываем более информативное сообщение об ошибке
-        const errorMessage = `Произошла ошибка при инициализации приложения: ${error.message}. Пожалуйста, перезагрузите страницу.`;
-        alert(errorMessage);
+        const errorMessage = `Произошла ошибка при инициализации приложения: ${error.message}. Пожалуйста, перезагрузите страницу.`
+        alert(errorMessage)
         
         // Пытаемся показать базовый интерфейс даже при ошибке
-        const splashScreen = document.querySelector('.splash-screen');
+        const splashScreen = document.querySelector('.splash-screen')
         if (splashScreen) {
-            splashScreen.style.display = 'none';
+            splashScreen.style.display = 'none'
         }
     }
-}
-
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        initializeApp();
-    } catch (error) {
-        console.error('Error on DOMContentLoaded:', error);
-        alert('Произошла ошибка при загрузке приложения. Пожалуйста, перезагрузите страницу.');
-    }
-});
+})
 
 function deleteShift(index) {
     if (confirm('Вы уверены, что хотите удалить эту смену?')) {
         // Удаляем смену из массива истории
-        state.shiftHistory.splice(index, 1);
+        state.shiftHistory.splice(index, 1)
         
         // Сохраняем обновленное состояние
-        saveState();
+        saveState()
         
         // Обновляем отображение истории и общей статистики
-        updateHistoryDisplay();
-        updateTotalStats();
+        updateHistoryDisplay()
+        updateTotalStats()
         
         // Принудительно обновляем localStorage
-        localStorage.setItem('scooterAppState', JSON.stringify(state));
+        localStorage.setItem('scooterAppState', JSON.stringify(state))
     }
 }
 
@@ -1028,47 +968,39 @@ function formatParkingName(parkingId) {
         'polytech': 'Политех',
         'yuzhka': 'Южка',
         'repairs': 'Исправления и замены'
-    };
+    }
     
-    return parkingNames[parkingId] || parkingId;
+    return parkingNames[parkingId] || parkingId
 }
 
 function removeRepair(type, scooterNumber) {
-    if (!state.isShiftActive) return;
-    
-    const index = state.repairs[type].indexOf(scooterNumber);
+    if (!state.isShiftActive) return
+
+    const index = state.repairs[type].indexOf(scooterNumber)
     if (index > -1) {
         // Сохраняем статус перед удалением
-        const status = state.repairStatuses[type][scooterNumber]?.status;
-        
+        const status = state.repairStatuses[type][scooterNumber]?.status
+
         // Удаляем из списка исправлений
-        state.repairs[type].splice(index, 1);
+        state.repairs[type].splice(index, 1)
         // Удаляем статус
-        delete state.repairStatuses[type][scooterNumber];
-        
-        // Проверяем сохраненный статус
+        delete state.repairStatuses[type][scooterNumber]
+
         if (status === 'fixed') {
             // Если самокат был исправлен, убираем его из парковки
-            const parkings = Object.keys(state.parkingData);
+            const parkings = Object.keys(state.parkingData)
             if (parkings.length > 0) {
-                const targetParking = state.selectedParking || parkings[0];
+                const targetParking = state.selectedParking || parkings[0]
                 if (state.parkingData[targetParking] && state.parkingData[targetParking][type] > 0) {
-                    state.parkingData[targetParking][type]--;
+                    state.parkingData[targetParking][type]--
                 }
             }
-        } else if (status === 'warehouse') {
-            // Если самокат был на складе, убираем его из замен
-            const replacementIndex = state.repairs[type].indexOf(scooterNumber);
-            if (replacementIndex > -1) {
-                state.repairs[type].splice(replacementIndex, 1);
-                delete state.repairStatuses[type][scooterNumber];
-                updateRepairsList();
-            }
         }
-        
-        updateParkingCounters();
-        updateTotalScooters();
-        updateRepairsList();
-        saveState();
+        // Не нужно повторно удалять для warehouse!
+
+        updateParkingCounters()
+        updateTotalScooters()
+        updateRepairsList()
+        saveState()
     }
-} 
+}
